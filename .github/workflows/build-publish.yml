@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: warp-build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
