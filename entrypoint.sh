@@ -3,7 +3,8 @@
 # exit when any command fails
 set -e
 
-# create a tun device if not exist to ensure compatibility with Podman
+# create a tun device if not exist
+# allow passing device to ensure compatibility with Podman
 if [ ! -e /dev/net/tun ]; then
     sudo mkdir -p /dev/net
     sudo mknod /dev/net/tun c 10 200
@@ -38,6 +39,13 @@ if [ ! -f /var/lib/cloudflare-warp/reg.json ]; then
     warp-cli --accept-tos connect
 else
     echo "Warp client already registered, skip registration"
+fi
+
+# disable qlog if DEBUG_ENABLE_QLOG is empty
+if [ -z "$DEBUG_ENABLE_QLOG" ]; then
+    warp-cli --accept-tos debug qlog disable
+else
+    warp-cli --accept-tos debug qlog enable
 fi
 
 # start the proxy
